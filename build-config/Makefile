@@ -397,11 +397,17 @@ machine-prefix:
 	$(Q) echo $(MACHINE_PREFIX)
 
 # Install required build packages for a x86_64 debian based build host
+
+# libtool binary is in libtool package in older Debian/Ubuntu releases and in
+# libtool-bin in recent releases
+DEBIAN_LIBTOOL_BIN = \
+	$(if `apt-cache policy libtool-bin 2>/dev/null`,,libtool-bin)
+
 DEBIAN_BUILD_HOST_PACKAGES	= build-essential stgit u-boot-tools util-linux \
 				  gperf device-tree-compiler python-all-dev xorriso \
-				  autoconf automake bison flex texinfo libtool libtool-bin \
+				  autoconf automake bison flex texinfo libtool \
 				  realpath gawk libncurses5 libncurses5-dev bc \
-				  dosfstools mtools
+				  dosfstools mtools $(DEBIAN_LIBTOOL_BIN)
 
 PHONY += debian-prepare-build-host
 debian-prepare-build-host:
